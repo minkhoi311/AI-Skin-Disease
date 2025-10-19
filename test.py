@@ -6,7 +6,7 @@ from tensorflow.keras.preprocessing import image
 import matplotlib.pyplot as plt
 
 # ==== 1. Cấu hình ====
-MODEL_PATH = "test.h5"  # ⚠️ thay bằng file .h5 của bạn
+MODEL_PATH = "best_model.h5"  # ⚠️ thay bằng file .h5 của bạn
 DATASET_PATH = "Dataset/train"  # để lấy tên lớp
 IMG_SIZE = (192, 192)
 
@@ -30,9 +30,17 @@ def predict_image(img_path, show_image=True):
     # Load ảnh và tiền xử lý
     img = image.load_img(img_path, target_size=IMG_SIZE)
     img_array = image.img_to_array(img)
-    img_array = img_array / 255.0  # normalize
     img_array = np.expand_dims(img_array, axis=0)
 
+    # In thông tin và hình ảnh sau khi xử lý
+    plt.figure(figsize=(4, 4))
+    plt.imshow(np.array(img).astype(np.uint8)) # chuyển ngược về dạng hiển thị được
+    plt.title(f"Hình đã resize: {IMG_SIZE}")
+    plt.axis("off")
+    plt.show()
+
+    print(f"Shape sau tiền xử lý: {img_array.shape}")
+    print(f"Giá trị pixel [0,0,:]: {img_array[0, 0, 0, :]}")
     # Dự đoán
     preds = model.predict(img_array)
     pred_index = np.argmax(preds[0])

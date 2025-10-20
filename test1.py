@@ -1,6 +1,7 @@
 import sys
 import os
 import numpy as np
+from googletrans import Translator
 import pandas as pd
 import tensorflow as tf
 import re
@@ -33,28 +34,18 @@ class_names = sorted(os.listdir(DATASET_PATH))
 # ===== Load model CNN =====
 model = load_model(MODEL_PATH)
 
-# ===== Bản đồ nhãn tiếng Anh -> tiếng Việt =====
-label_map = {
-    "Acne and Rosacea Photos": "Mụn trứng cá và chứng đỏ mặt (Rosacea)",
-    "Actinic Keratosis Basal Cell Carcinoma and other Malignant Lesions": "Tổn thương ác tính và tiền ung thư da",
-    "Atopic Dermatitis Photos": "Viêm da cơ địa",
-    "Cellulitis Impetigo and other Bacterial Infections": "Nhiễm trùng da do vi khuẩn (Chốc lở, viêm mô tế bào...)",
-    "Eczema Photos": "Bệnh chàm (Eczema)",
-    "Exanthems and Drug Eruptions": "Phát ban và dị ứng do thuốc",
-    "Herpes HPV and other STDs Photos": "Bệnh lây truyền qua đường tình dục (Herpes, HPV...)",
-    "Light Diseases and Disorders of Pigmentation": "Rối loạn sắc tố và bệnh do ánh sáng",
-    "Lupus and other Connective Tissue diseases": "Lupus và bệnh mô liên kết",
-    "Melanoma Skin Cancer Nevi and Moles": "Ung thư hắc tố, nốt ruồi và bớt da",
-    "Poison Ivy Photos and other Contact Dermatitis": "Viêm da tiếp xúc (Poison Ivy, dị ứng...)",
-    "Psoriasis pictures Lichen Planus and related diseases": "Vảy nến và các bệnh da tương tự (Lichen Planus...)",
-    "Seborrheic Keratoses and other Benign Tumors": "U lành tính và dày sừng tiết bã",
-    "Systemic Disease": "Biểu hiện da của bệnh hệ thống",
-    "Tinea Ringworm Candidiasis and other Fungal Infections": "Nhiễm nấm da (Hắc lào, Candida...)",
-    "Urticaria Hives": "Mề đay (Urticaria)",
-    "Vascular Tumors": "U mạch máu",
-    "Vasculitis Photos": "Viêm mạch máu",
-    "Warts Molluscum and other Viral Infections": "Mụn cóc, Molluscum và nhiễm virus khác"
-}
+
+# Hàm dịch tự động
+def auto_translate_labels(class_list):
+    translator = Translator()
+    label_map = {}
+    for name in class_list:
+        vi_name = translator.translate(name, src='en', dest='vi').text
+        label_map[name] = vi_name
+    return label_map
+
+# Dịch sang tiếng Việt
+label_map = auto_translate_labels(class_names)
 
 # ===== Load triệu chứng =====
 df_symptoms = pd.read_excel(SYMPTOM_FILE)
@@ -63,6 +54,7 @@ if 'Disease' not in df_symptoms.columns or 'Symptom' not in df_symptoms.columns:
 
 vectorizer = TfidfVectorizer()
 tfidf_matrix = vectorizer.fit_transform(df_symptoms['Symptom'])
+
 
 # ==== Hàm tiền xử lý text ====
 def preprocess_text(text):
@@ -77,6 +69,7 @@ def preprocess_text(text):
     text = text.replace("vảy", "vảy trắng da khô")
     return text.strip()
 
+
 # ==== Dự đoán ảnh ====
 def predict_image(img_path):
     img = image.load_img(img_path, target_size=IMG_SIZE)
@@ -84,6 +77,7 @@ def predict_image(img_path):
     img_array = np.expand_dims(img_array, axis=0)
     preds = model.predict(img_array)
     return preds[0]
+
 
 # ==== Dự đoán triệu chứng ====
 def predict_from_text(patient_desc):

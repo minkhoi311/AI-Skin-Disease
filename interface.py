@@ -1,6 +1,7 @@
 import sys
 import os
 import numpy as np
+from googletrans import Translator
 import tensorflow as tf
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QLabel, QPushButton, QTextEdit,

@@ -24,7 +24,7 @@ MODEL_PATH = "cnn_model_final.h5"
 IMG_SIZE = (192, 192)
 DATASET_PATH = "Dataset/train"
 SYMPTOM_FILE = "skin_diseases.xlsx"
-ALPHA = 0.7  # Ảnh chiếm 60%, text chiếm 40%
+ALPHA = 0.7  # Ảnh chiếm 70%, text chiếm 30%
 
 # ===== Load lớp =====
 if not os.path.exists(DATASET_PATH):

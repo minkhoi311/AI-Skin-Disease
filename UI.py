@@ -97,6 +97,7 @@ class SkinDiagnosisApp(QWidget):
         self.btn_load.clicked.connect(self.load_image)
         self.btn_predict.clicked.connect(self.make_prediction)
         self.img_path = None
+        self.setFixedSize(self.size())
 
     def load_image(self):
         fname, _ = QFileDialog.getOpenFileName(self, "Chọn ảnh", "", "Images (*.png *.jpg *.jpeg)")

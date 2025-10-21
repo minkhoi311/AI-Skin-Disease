@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SkinDiagnosisApp</class>
+ <widget class="QWidget" name="SkinDiagnosisApp">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1022</width>
+    <height>444</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>🩺 AI Chẩn đoán Bệnh Da Liễu</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+QWidget {
+    background-color: #f8fdfd;
+    font-family: 'Segoe UI';
+}
+QLabel {
+    color: #034f84;
+    font-size: 15px;
+}
+QPushButton {
+    background-color: #5ac8c8;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 14px;
+}
+QPushButton:hover {
+    background-color: #3aa7a7;
+}
+QTextEdit {
+    border: 1px solid #a0d8d8;
+    border-radius: 8px;
+    background-color: #ffffff;
+    padding: 6px;
+    font-size: 14px;
+}
+#ResultLabel {
+    background-color: #e6f9f8;
+    border: 1px solid #b2ebe9;
+    border-radius: 10px;
+    padding: 12px;
+    color: #034f84;
+    font-size: 15px;
+    font-weight: 500;
+}
+   </string>
+  </property>
+  <layout class="QHBoxLayout" name="main_layout">
+   <property name="spacing">
+    <number>30</number>
+   </property>
+   <item>
+    <layout class="QVBoxLayout" name="left_layout">
+     <item>
+      <widget class="QLabel" name="image_label">
+       <property name="minimumSize">
+        <size>
+         <width>260</width>
+         <height>260</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border: 2px dashed #a0d8d8; border-radius: 12px;</string>
+       </property>
+       <property name="text">
+        <string>(Ảnh da sẽ hiển thị ở đây)</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_load">
+       <property name="text">
+        <string>📂 Chọn ảnh da</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="spacer_left">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>200</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="right_layout">
+     <item>
+      <widget class="QLabel" name="label_title">
+       <property name="font">
+        <font>
+         <family>Segoe UI</family>
+         <pointsize>-1</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>🧾 Nhập mô tả triệu chứng:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTextEdit" name="desc_input">
+       <property name="placeholderText">
+        <string>Mô tả triệu chứng (ví dụ: ngứa, khô, nổi mụn...)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_predict">
+       <property name="text">
+        <string>🤖 Phân tích &amp; Dự đoán</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="result_label">
+       <property name="text">
+        <string>🧠 Kết quả dự đoán sẽ hiển thị ở đây.</string>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="spacer_right">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>100</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

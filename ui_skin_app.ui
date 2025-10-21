@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1022</width>
-    <height>444</height>
+    <width>1100</width>
+    <height>520</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,6 +15,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">
+
 QWidget {
     background-color: #f8fdfd;
     font-family: 'Segoe UI';
@@ -58,6 +59,12 @@ QTextEdit {
    </property>
    <item>
     <layout class="QVBoxLayout" name="left_layout">
+     <property name="topMargin">
+      <number>55</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
      <item>
       <widget class="QLabel" name="image_label">
        <property name="minimumSize">
@@ -65,6 +72,9 @@ QTextEdit {
          <width>260</width>
          <height>260</height>
         </size>
+       </property>
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
        </property>
        <property name="styleSheet">
         <string notr="true">border: 2px dashed #a0d8d8; border-radius: 12px;</string>
@@ -79,6 +89,9 @@ QTextEdit {
      </item>
      <item>
       <widget class="QPushButton" name="btn_load">
+       <property name="layoutDirection">
+        <enum>Qt::LeftToRight</enum>
+       </property>
        <property name="text">
         <string>📂 Chọn ảnh da</string>
        </property>
@@ -89,10 +102,13 @@ QTextEdit {
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Maximum</enum>
+       </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>20</width>
-         <height>200</height>
+         <width>10</width>
+         <height>100</height>
         </size>
        </property>
       </spacer>
@@ -107,8 +123,6 @@ QTextEdit {
         <font>
          <family>Segoe UI</family>
          <pointsize>-1</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
         </font>
        </property>
        <property name="text">

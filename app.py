@@ -2,6 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+import json
 import re
 from flask import Flask, render_template, request
 from tensorflow.keras.models import load_model
@@ -10,72 +11,49 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from werkzeug.utils import secure_filename
 
-# ===== Cấu hình =====
-app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+# ===== Khởi tạo mô hình & dữ liệu =====
+global model, class_names, label_map, vectorizer, tfidf_matrix, df_symptoms
 
 MODEL_PATH = "cnn_model_final.h5"
+DISEASE_FILE = "data/diseases.json"
 IMG_SIZE = (192, 192)
 SYMPTOM_FILE = "skin_diseases.xlsx"
 ALPHA = 0.7  # Tỷ lệ kết hợp giữa ảnh và mô tả
 
+
 # ===== Tải mô hình =====
 model = load_model(MODEL_PATH)
 
-# ===== Danh sách nhãn bệnh =====
-class_names = [
-    "Acne and Rosacea",
-    "Actinic Keratosis, Basal Cell Carcinoma, and other Malignant Lesions",
-    "Atopic Dermatitis",
-    "Cellulitis, Impetigo, and other Bacterial Infections",
-    "Eczema",
-    "Exanthems and Drug Eruptions",
-    "Herpes, HPV, and other STDs",
-    "Light Diseases and Disorders of Pigmentation",
-    "Lupus and other Connective Tissue Diseases",
-    "Melanoma, Skin Cancer, Nevi, and Moles",
-    "Poison Ivy and Contact Dermatitis",
-    "Psoriasis, Lichen Planus, and related diseases",
-    "Seborrheic Keratoses and other Benign Tumors",
-    "Systemic Disease",
-    "Tinea, Ringworm, Candidiasis, and other Fungal Infections",
-    "Urticaria",
-    "Vascular Tumors",
-    "Vasculitis",
-    "Warts, Molluscum, and other Viral Infections"
-]
 
-# ===== Bản dịch tiếng Việt =====
-label_map = {
-    "Acne and Rosacea": "Mụn trứng cá và hoặc các dạng mụn nói chung",
-    "Actinic Keratosis, Basal Cell Carcinoma, and other Malignant Lesions": "Dày sừng ánh sáng, ung thư biểu mô tế bào đáy và các tổn thương ác tính khác",
-    "Atopic Dermatitis": "Viêm da cơ địa",
-    "Cellulitis, Impetigo, and other Bacterial Infections": "Viêm mô tế bào, chốc lở và các nhiễm trùng da do vi khuẩn khác",
-    "Eczema": "Chàm (Eczema)",
-    "Exanthems and Drug Eruptions": "Phát ban do virus hoặc phản ứng thuốc",
-    "Herpes, HPV, and other STDs": "Mụn rộp, HPV và các bệnh lây qua đường tình dục khác",
-    "Light Diseases and Disorders of Pigmentation": "Rối loạn sắc tố và bệnh lý do ánh sáng",
-    "Lupus and other Connective Tissue Diseases": "Lupus và các bệnh mô liên kết khác",
-    "Melanoma, Skin Cancer, Nevi, and Moles": "U hắc tố, ung thư da, nốt ruồi và bớt",
-    "Poison Ivy and Contact Dermatitis": "Viêm da tiếp xúc (do cây thường xuân hoặc chất gây kích ứng)",
-    "Psoriasis, Lichen Planus, and related diseases": "Vảy nến, lichen phẳng và các bệnh liên quan",
-    "Seborrheic Keratoses and other Benign Tumors": "Dày sừng tiết bã và các khối u lành tính khác",
-    "Systemic Disease": "Bệnh lý hệ thống",
-    "Tinea, Ringworm, Candidiasis, and other Fungal Infections": "Nấm da, hắc lào, candida và các nhiễm nấm khác",
-    "Urticaria": "Mề đay",
-    "Vascular Tumors": "U mạch máu",
-    "Vasculitis": "Viêm mạch máu",
-    "Warts, Molluscum, and other Viral Infections": "Mụn cóc, u mềm lây và các nhiễm virus khác"
-}
+#Load class_names & label_map từ JSON
+with open(DISEASE_FILE, "r", encoding="utf-8") as f:
+    disease_data = json.load(f)
+
+class_names = disease_data["class_names"]
+label_map = disease_data["label_map"]
 
 # ===== Dữ liệu triệu chứng =====
 df_symptoms = pd.read_excel(SYMPTOM_FILE)
 if 'Disease' not in df_symptoms.columns or 'Symptom' not in df_symptoms.columns:
     raise ValueError("File triệu chứng cần có cột 'Disease' và 'Symptom'.")
 
+
+# ===== Cấu hình =====
+def create_app():
+    app = Flask(__name__)
+    app.config['UPLOAD_FOLDER'] = 'static/uploads'
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+    return app
+
+
+app = create_app()
+
+df_symptoms = pd.read_excel("skin_diseases.xlsx")
 vectorizer = TfidfVectorizer()
 tfidf_matrix = vectorizer.fit_transform(df_symptoms['Symptom'])
+
 
 # ===== Các hàm xử lý =====
 def preprocess_text(text):
@@ -88,12 +66,15 @@ def preprocess_text(text):
     text = text.replace("vảy", "vảy trắng da khô")
     return text.strip()
 
+
+
 def predict_image(img_path):
     img = image.load_img(img_path, target_size=IMG_SIZE)
     img_array = image.img_to_array(img)
     img_array = np.expand_dims(img_array, axis=0)
     preds = model.predict(img_array)
     return preds[0]
+
 
 def predict_from_text(patient_desc):
     if not patient_desc.strip():
@@ -111,6 +92,7 @@ def predict_from_text(patient_desc):
             text_scores[i] = np.max(sims[matches])
     return text_scores
 
+
 def generate_advice(pred_class_vi, desc):
     advice = f"Nếu tình trạng {pred_class_vi.lower()} kéo dài, hãy gặp bác sĩ da liễu sớm."
     if desc:
@@ -124,6 +106,7 @@ def generate_advice(pred_class_vi, desc):
         if "bong" in desc_lower or "tróc" in desc_lower:
             advice += " Nên dưỡng ẩm thường xuyên."
     return advice
+
 
 # ===== Flask Routes =====
 @app.route('/', methods=['GET', 'POST'])
@@ -156,3 +139,4 @@ def index():
 
 if __name__ == '__main__':
     app.run(debug=True)
+

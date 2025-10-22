@@ -1,0 +1,46 @@
+{
+  "class_names": [
+    "Acne and Rosacea",
+    "Actinic Keratosis, Basal Cell Carcinoma, and other Malignant Lesions",
+    "Atopic Dermatitis",
+    "Cellulitis, Impetigo, and other Bacterial Infections",
+    "Eczema",
+    "Exanthems and Drug Eruptions",
+    "Herpes, HPV, and other STDs",
+    "Light Diseases and Disorders of Pigmentation",
+    "Lupus and other Connective Tissue Diseases",
+    "Melanoma, Skin Cancer, Nevi, and Moles",
+    "Poison Ivy and Contact Dermatitis",
+    "Psoriasis, Lichen Planus, and related diseases",
+    "Seborrheic Keratoses and other Benign Tumors",
+    "Systemic Disease",
+    "Tinea, Ringworm, Candidiasis, and other Fungal Infections",
+    "Urticaria",
+    "Vascular Tumors",
+    "Vasculitis",
+    "Warts, Molluscum, and other Viral Infections"
+  ],
+
+
+  "label_map": {
+    "Acne and Rosacea": "Mụn trứng cá và hoặc các dạng mụn nói chung",
+    "Actinic Keratosis, Basal Cell Carcinoma, and other Malignant Lesions": "Dày sừng ánh sáng, ung thư biểu mô tế bào đáy và các tổn thương ác tính khác",
+    "Atopic Dermatitis": "Viêm da cơ địa",
+    "Cellulitis, Impetigo, and other Bacterial Infections": "Viêm mô tế bào, chốc lở và các nhiễm trùng da do vi khuẩn khác",
+    "Eczema": "Chàm (Eczema)",
+    "Exanthems and Drug Eruptions": "Phát ban do virus hoặc phản ứng thuốc",
+    "Herpes, HPV, and other STDs": "Mụn rộp, HPV và các bệnh lây qua đường tình dục khác",
+    "Light Diseases and Disorders of Pigmentation": "Rối loạn sắc tố và bệnh lý do ánh sáng",
+    "Lupus and other Connective Tissue Diseases": "Lupus và các bệnh mô liên kết khác",
+    "Melanoma, Skin Cancer, Nevi, and Moles": "U hắc tố, ung thư da, nốt ruồi và bớt",
+    "Poison Ivy and Contact Dermatitis": "Viêm da tiếp xúc (do cây thường xuân hoặc chất gây kích ứng)",
+    "Psoriasis, Lichen Planus, and related diseases": "Vảy nến, lichen phẳng và các bệnh liên quan",
+    "Seborrheic Keratoses and other Benign Tumors": "Dày sừng tiết bã và các khối u lành tính khác",
+    "Systemic Disease": "Bệnh lý hệ thống",
+    "Tinea, Ringworm, Candidiasis, and other Fungal Infections": "Nấm da, hắc lào, candida và các nhiễm nấm khác",
+    "Urticaria": "Mề đay",
+    "Vascular Tumors": "U mạch máu",
+    "Vasculitis": "Viêm mạch máu",
+    "Warts, Molluscum, and other Viral Infections": "Mụn cóc, u mềm lây và các nhiễm virus khác"
+  }
+}

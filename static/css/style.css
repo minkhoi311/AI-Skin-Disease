@@ -44,7 +44,7 @@ body {
 
 img.preview {
     display: block;
-    margin: 15px auto;  /* Căn giữa ảnh */
+    margin: 15px auto;
     width: 300px;
     height: 300px;
     object-fit: cover;

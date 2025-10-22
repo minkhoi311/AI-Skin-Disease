@@ -8,6 +8,7 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from googletrans import Translator
 from werkzeug.utils import secure_filename
 
 # ===== Cấu hình =====
@@ -17,57 +18,31 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 MODEL_PATH = "cnn_model_final.h5"
 IMG_SIZE = (192, 192)
+DATASET_PATH = "Dataset/train"
 SYMPTOM_FILE = "skin_diseases.xlsx"
-ALPHA = 0.7  # Tỷ lệ kết hợp giữa ảnh và mô tả
+ALPHA = 0.7
 
-# ===== Tải mô hình =====
+# ===== Tải mô hình và dữ liệu =====
+if not os.path.exists(DATASET_PATH):
+    raise FileNotFoundError(f"Không tìm thấy thư mục dataset: {DATASET_PATH}")
+class_names = sorted(os.listdir(DATASET_PATH))
 model = load_model(MODEL_PATH)
 
-# ===== Danh sách nhãn bệnh =====
-class_names = [
-    "Acne and Rosacea",
-    "Actinic Keratosis, Basal Cell Carcinoma, and other Malignant Lesions",
-    "Atopic Dermatitis",
-    "Cellulitis, Impetigo, and other Bacterial Infections",
-    "Eczema",
-    "Exanthems and Drug Eruptions",
-    "Herpes, HPV, and other STDs",
-    "Light Diseases and Disorders of Pigmentation",
-    "Lupus and other Connective Tissue Diseases",
-    "Melanoma, Skin Cancer, Nevi, and Moles",
-    "Poison Ivy and Contact Dermatitis",
-    "Psoriasis, Lichen Planus, and related diseases",
-    "Seborrheic Keratoses and other Benign Tumors",
-    "Systemic Disease",
-    "Tinea, Ringworm, Candidiasis, and other Fungal Infections",
-    "Urticaria",
-    "Vascular Tumors",
-    "Vasculitis",
-    "Warts, Molluscum, and other Viral Infections"
-]
 
-# ===== Bản dịch tiếng Việt =====
-label_map = {
-    "Acne and Rosacea": "Mụn trứng cá và hoặc các dạng mụn nói chung",
-    "Actinic Keratosis, Basal Cell Carcinoma, and other Malignant Lesions": "Dày sừng ánh sáng, ung thư biểu mô tế bào đáy và các tổn thương ác tính khác",
-    "Atopic Dermatitis": "Viêm da cơ địa",
-    "Cellulitis, Impetigo, and other Bacterial Infections": "Viêm mô tế bào, chốc lở và các nhiễm trùng da do vi khuẩn khác",
-    "Eczema": "Chàm (Eczema)",
-    "Exanthems and Drug Eruptions": "Phát ban do virus hoặc phản ứng thuốc",
-    "Herpes, HPV, and other STDs": "Mụn rộp, HPV và các bệnh lây qua đường tình dục khác",
-    "Light Diseases and Disorders of Pigmentation": "Rối loạn sắc tố và bệnh lý do ánh sáng",
-    "Lupus and other Connective Tissue Diseases": "Lupus và các bệnh mô liên kết khác",
-    "Melanoma, Skin Cancer, Nevi, and Moles": "U hắc tố, ung thư da, nốt ruồi và bớt",
-    "Poison Ivy and Contact Dermatitis": "Viêm da tiếp xúc (do cây thường xuân hoặc chất gây kích ứng)",
-    "Psoriasis, Lichen Planus, and related diseases": "Vảy nến, lichen phẳng và các bệnh liên quan",
-    "Seborrheic Keratoses and other Benign Tumors": "Dày sừng tiết bã và các khối u lành tính khác",
-    "Systemic Disease": "Bệnh lý hệ thống",
-    "Tinea, Ringworm, Candidiasis, and other Fungal Infections": "Nấm da, hắc lào, candida và các nhiễm nấm khác",
-    "Urticaria": "Mề đay",
-    "Vascular Tumors": "U mạch máu",
-    "Vasculitis": "Viêm mạch máu",
-    "Warts, Molluscum, and other Viral Infections": "Mụn cóc, u mềm lây và các nhiễm virus khác"
-}
+# ===== Dịch nhãn sang tiếng Việt =====
+def auto_translate_labels(class_list):
+    translator = Translator()
+    label_map = {}
+    for name in class_list:
+        try:
+            vi_name = translator.translate(name, src='en', dest='vi').text
+        except Exception:
+            vi_name = name
+        label_map[name] = vi_name
+    return label_map
+
+
+label_map = auto_translate_labels(class_names)
 
 # ===== Dữ liệu triệu chứng =====
 df_symptoms = pd.read_excel(SYMPTOM_FILE)
@@ -77,7 +52,8 @@ if 'Disease' not in df_symptoms.columns or 'Symptom' not in df_symptoms.columns:
 vectorizer = TfidfVectorizer()
 tfidf_matrix = vectorizer.fit_transform(df_symptoms['Symptom'])
 
-# ===== Các hàm xử lý =====
+
+# ===== Hàm xử lý =====
 def preprocess_text(text):
     text = text.lower()
     text = re.sub(r'[^a-zA-ZÀ-ỹ\s]', '', text)
@@ -88,12 +64,14 @@ def preprocess_text(text):
     text = text.replace("vảy", "vảy trắng da khô")
     return text.strip()
 
+
 def predict_image(img_path):
     img = image.load_img(img_path, target_size=IMG_SIZE)
     img_array = image.img_to_array(img)
     img_array = np.expand_dims(img_array, axis=0)
     preds = model.predict(img_array)
     return preds[0]
+
 
 def predict_from_text(patient_desc):
     if not patient_desc.strip():
@@ -111,6 +89,7 @@ def predict_from_text(patient_desc):
             text_scores[i] = np.max(sims[matches])
     return text_scores
 
+
 def generate_advice(pred_class_vi, desc):
     advice = f"Nếu tình trạng {pred_class_vi.lower()} kéo dài, hãy gặp bác sĩ da liễu sớm."
     if desc:
@@ -124,6 +103,7 @@ def generate_advice(pred_class_vi, desc):
         if "bong" in desc_lower or "tróc" in desc_lower:
             advice += " Nên dưỡng ẩm thường xuyên."
     return advice
+
 
 # ===== Flask Routes =====
 @app.route('/', methods=['GET', 'POST'])
@@ -153,6 +133,7 @@ def index():
             result = f"Dự đoán: {final_class_vi}"
 
     return render_template('index.html', result=result, advice=advice, img_path=img_path)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

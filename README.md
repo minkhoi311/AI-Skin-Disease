@@ -40,9 +40,7 @@ pip install -r requirements.txt
 python app.py
 ```
 ### 🔹 Bước 3: Chuẩn bị dữ liệu & mô hình
-
-* Đặt mô hình đã huấn luyện (`cnn_model_final.h5`) vào thư mục gốc dự án.
-* Tạo thư mục `Dataset/train` chứa các thư mục con tương ứng với từng loại bệnh (mỗi thư mục là một lớp).
+* Tải lại mô hình đã huấn luyện (`cnn_model_final.h5`) trên github vào thư mục gốc dự án.
 * Đảm bảo file `skin_diseases.xlsx` có **2 cột bắt buộc**:
 
 

@@ -53,4 +53,14 @@ img.preview {
     background-color: #fdfefe;
     transition: all 0.3s ease;
 }
+/* thanh confident*/
+.progress {
+    background-color: #e0f7f7;
+    border-radius: 15px;
+    overflow: hidden;
+}
 
+.progress-bar {
+    background: linear-gradient(90deg, #3aa7a7, #5ac8c8);
+    transition: width 1s ease;
+}

@@ -39,6 +39,20 @@
                 {% if result %}
                 <div class="result-box mt-4">
                     <h5>{{ result }}</h5>
+                    <!--thanh confident-->
+                    {% if confidence %}
+                    <div class="progress mt-3" style="height: 25px;">
+                        <div class="progress-bar bg-info fw-bold"
+                             role="progressbar"
+                             style="width: {{ confidence }}%;"
+                             aria-valuenow="{{ confidence }}"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+                            {{ confidence }}%
+                        </div>
+                    </div>
+                    {% endif %}
+
                     {% if advice %}
                     <p class="mb-0"><b>💡 Gợi ý:</b> {{ advice }}</p>
                     {% endif %}

@@ -38,15 +38,13 @@ git clone https://github.com/minkhoi311/AI-Skin-Disease
 cd AI-Skin-Disease
 ```
 
-## Cài đặt thư viện cần thiết
 ### 🔹 Bước 2: Cài đặt thư viện cần thiết
-
 
 ```bash
 pip install -r requirements.txt
----
+```
 
-## Chạy chương trình giao diện (GUI)
+#### Chạy chương trình giao diện (GUI)
 ```bash
 python app.py
 ```
@@ -61,14 +59,6 @@ python app.py
   * `Symptom` — mô tả triệu chứng tương ứng
 
 
-# License & Compatibility
-- License: MIT License (OSI-approved)
-- Thư viện sử dụng:
-TensorFlow (Apache 2.0),
-NumPy (BSD),
-Matplotlib (PSF),
-scikit-learn (BSD),
----
 
 ##  3. Chạy ứng dụng web
 
@@ -97,19 +87,23 @@ Tại đây, bạn có thể:
 * **Thời gian dự đoán trung bình:** ~2–3 giây / ảnh
 * **Độ chính xác (ước lượng):** 60–80% trên tập kiểm thử
 
-
 ---
 
 ##  6. License
 
-* **Giấy phép:** MIT License (mở và được phép sử dụng tự do)
+* **Giấy phép:** 
+  * MIT License
+  * BSD License
+  * Apache License 2.0
+  * Python Software Foundation
 * **Các thư viện sử dụng:**
-
   * TensorFlow (Apache 2.0)
   * NumPy (BSD)
   * scikit-learn (BSD)
-  * Flask (BSD-3)
- 
+  * Flask (BSD)
+  * NumPy (BSD),
+  * Matplotlib (PSF)
+  * OpenPyXL (MIT)
 
 ---
 

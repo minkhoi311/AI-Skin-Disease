@@ -1,12 +1,3 @@
-# AI-Skin-Disease
-Ứng dụng **Trí tuệ nhân tạo (AI)** sử dụng **mô hình học sâu (Deep Learning)** — cụ thể là **Convolutional Neural Network (CNN)** để nhận dạng **bệnh lý da liễu** từ hình ảnh.  
-Người dùng có thể tải ảnh vùng da và mô tả triệu chứng, hệ thống sẽ **dự đoán loại bệnh tương ứng** cùng **một số lời khuyên hữu ích**.
-
-# Cài đặt và chạy
-**Ngôn ngữ:** Python 3.11  
-**Framework:** TensorFlow, Flask, scikit-learn
-
-### 🔹 Clone repository
 #  AI-Skin-Disease — Hệ thống nhận diện bệnh da bằng AI
 
 Dự án này sử dụng **Deep Learning (CNN)** kết hợp với **Xử lý ngôn ngữ tự nhiên (NLP)** để **nhận dạng các bệnh lý da liễu từ hình ảnh và mô tả triệu chứng**.
